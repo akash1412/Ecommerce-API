@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server"
+    "start:dev": "nodemon server",
+    "start:prod": "set NODE_ENV=production&& nodemon server"
   },
   "author": "Akash",
   "license": "ISC",

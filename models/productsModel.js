@@ -6,7 +6,8 @@ const productSchema = new mongoose.Schema({
         required: [true, 'A Product msut have a name'],
         unique: [true, ' Provided name must be Unique '],
         trim: true,
-        minlength: 8
+        minlength: [10, 'A Producr must have have more or equal to 10 Characters'],
+        maxlength: [40, 'A Producr must have have less or equal to 40 Characters']
     },
     price: {
         type: Number,
@@ -20,7 +21,9 @@ const productSchema = new mongoose.Schema({
     images: [String],
     ratingsAverage: {
         type: Number,
-        default: 4.5
+        default: 4.5,
+        min: [1, 'Rating must be above or equal to 1.0'],
+        max: [5, 'Rating must be less or equal to 5.0']
     },
     ratingsQuantity: {
         type: Number,

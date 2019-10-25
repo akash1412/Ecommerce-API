@@ -1,6 +1,6 @@
 const User = require("../models/usersModel");
 
-exports.getUsers = async (req, res) => {
+exports.getUsers = async (req, res, next) => {
     try {
         let query = User.find();
 
@@ -24,14 +24,11 @@ exports.getUsers = async (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        res.status(400).json({
-            status: "Fail",
-            message: err
-        });
+        next(err)
     }
 };
 
-exports.getUser = async (req, res) => {
+exports.getUser = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
         res.status(200).json({
@@ -41,15 +38,12 @@ exports.getUser = async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
-            status: 'Fail',
-            message: err
-        })
+        next(err)
     }
 
 };
 
-exports.createUser = async (req, res) => {
+exports.createUser = async (req, res, next) => {
     try {
 
         const user = await User.create(req.body);
@@ -61,15 +55,12 @@ exports.createUser = async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
-            status: 'Fail',
-            message: err
-        })
+        next(err)
     }
 
 };
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res, next) => {
     try {
         const user = await User.findByIdAndUpdate(req.params.id, req.body, {
             runValidators: true
@@ -83,14 +74,11 @@ exports.updateUser = async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
-            status: "Fail",
-            message: err
-        });
+        next(err)
     }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
         res.status(200).json({
@@ -101,9 +89,6 @@ exports.deleteUser = async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(400).json({
-            status: "Fail",
-            message: err
-        });
+        next(err)
     }
 };

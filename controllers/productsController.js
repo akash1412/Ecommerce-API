@@ -1,5 +1,4 @@
 const Product = require("../models/productsModel");
-const AppError = require('../utils/appError');
 
 exports.getProducts = async (req, res, next) => {
     try {
@@ -43,9 +42,6 @@ exports.getProduct = async (req, res, next) => {
     try {
         const product = await Product.findById(req.params.id);
 
-        if (!product) {
-            return next(new AppError('No Product found with that ID', 404))
-        }
 
         res.status(200).json({
             status: "success",
@@ -81,9 +77,7 @@ exports.updateProduct = async (req, res, next) => {
             runValidators: true
         });
 
-        if (!product) {
-            return next(new AppError('No Product found with that ID', 404))
-        }
+
 
 
         res.status(200).json({
@@ -102,9 +96,7 @@ exports.deleteProduct = async (req, res, next) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);
 
-        if (!product) {
-            return next(new AppError('No Product found with that ID', 404))
-        }
+
 
 
         res.status(200).json({

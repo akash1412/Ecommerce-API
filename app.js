@@ -1,7 +1,6 @@
 const express = require('express');
 const morgan = require('morgan')
 
-const globalErrorHandler = require('./controllers/errorController')
 
 const productsRouter = require('./routes/productRoutes');
 
@@ -18,7 +17,7 @@ app.use('/api/v1/products', productsRouter)
 
 
 
-app.use(globalErrorHandler)
+
 
 // module.exports = app;
 module.exports = app;

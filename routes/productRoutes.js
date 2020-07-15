@@ -1,5 +1,4 @@
 const productsController = require('../controllers/productsController')
-const authController = require('./../controllers/authController')
 
 const express = require('express');
 
@@ -9,7 +8,7 @@ const router = express.Router();
 
 router
     .route('/')
-    .get(authController.protect, productsController.getProducts)
+    .get(productsController.getProducts)
     .post(productsController.addProduct);
 
 

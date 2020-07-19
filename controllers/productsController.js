@@ -6,18 +6,32 @@ exports.getProducts = async (req, res, next) => {
 
         //* sorting 
         if (req.query.sort) {
-            query = query.sort(req.query.sort)
+
+            const sortQuery = req.query.sort.split(',').join(' ')
+            query = query.sort(sortQuery)
         } else {
-            // *sort using createdAt schema options
+
+            query = query.sort('createdAt')
         }
 
 
-        //* Pagination
+        // //* Pagination
 
         const page = req.query.page * 1 || 1;
-        const limit = req.query.limit * 1 || 2;
+        const limit = req.query.limit * 1 || 5;
         const skip = (page - 1) * limit;
         query = query.skip(skip).limit(limit);
+
+
+        // Field limiting
+        if (req.query.fields) {
+
+            const fields = req.query.fields.split(',').join(' ')
+
+            query = query.select(fields)
+        } else {
+            query = query.select('-__v')
+        }
 
         const products = await query;
 
@@ -29,12 +43,10 @@ exports.getProducts = async (req, res, next) => {
             }
         });
     } catch (err) {
-        console.log(err);
-        next(err)
-        // res.status(400).json({
-        //     status: "Fail",
-        //     message: err
-        // });
+        res.status(400).json({
+            status: "Fail",
+            message: err.message
+        });
     }
 };
 
@@ -50,7 +62,10 @@ exports.getProduct = async (req, res, next) => {
             }
         });
     } catch (err) {
-        next(err)
+        res.status(400).json({
+            status: "Fail",
+            message: err.message
+        });
     }
 
 };
@@ -66,7 +81,10 @@ exports.addProduct = async (req, res, next) => {
             }
         });
     } catch (err) {
-        next(err)
+        res.status(400).json({
+            status: "Fail",
+            message: err.message
+        });
     }
 
 };
@@ -77,9 +95,6 @@ exports.updateProduct = async (req, res, next) => {
             runValidators: true
         });
 
-
-
-
         res.status(200).json({
             status: "Success",
             message: "product updated",
@@ -88,16 +103,16 @@ exports.updateProduct = async (req, res, next) => {
             }
         });
     } catch (err) {
-        next(err)
+        res.status(400).json({
+            status: "Fail",
+            message: err.message
+        });
     }
 };
 
 exports.deleteProduct = async (req, res, next) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);
-
-
-
 
         res.status(200).json({
             status: "Success",
@@ -107,6 +122,40 @@ exports.deleteProduct = async (req, res, next) => {
             }
         });
     } catch (err) {
-        next(err)
+        res.status(400).json({
+            status: "Fail",
+            message: err.message
+        });
     }
 };
+
+
+// exports.productStats = async (req, res) => {
+
+//     try {
+//         const stats = await Product.aggregate([
+//             {
+//                 $match: { price: { $gte: 100 } }
+//             },
+//             // {
+//             //     $group: {
+//             //         _id: "$price"
+
+//             //     }
+//             // }
+//         ])
+
+//         res.status(200).json({
+//             status: "Success",
+//             data: {
+//                 stats
+//             }
+//         });
+//     } catch (error) {
+//         console.log(error)
+//         res.status(400).json({
+//             status: "Fail",
+//             message: err.message
+//         });
+//     }
+// }

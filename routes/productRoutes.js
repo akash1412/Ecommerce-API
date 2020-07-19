@@ -4,7 +4,7 @@ const express = require('express');
 
 const router = express.Router();
 
-
+// router.route('/product-stats').get(productsController.productStats)
 
 router
     .route('/')

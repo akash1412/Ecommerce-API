@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -9,31 +10,44 @@ const productSchema = new mongoose.Schema({
         minlength: [10, 'A Producr must have have more or equal to 10 Characters'],
         maxlength: [40, 'A Producr must have have less or equal to 40 Characters']
     },
+    slug: String,
     price: {
         type: Number,
-        required: [true, 'A Tour must have a Price']
+        required: [true, 'A Product must have a Price']
+    },
+    priceDiscount: {
+        type: Number,
+        validate: {
+            validator: function (val) {
+                return val < this.price
+            },
+            message: 'discount price {VALUE} must be less than actual price'
+        },
     },
     description: {
         type: String,
-        required: true
+        // required: {
+        //     value: true,
+        //     message: 'A product must have a description'
+        // },
+        //👇 this is shorthand syntax 
+        required: [true, 'A product must have a description']
     },
     coverImage: String,
     images: [String],
-    ratingsAverage: {
-        type: Number,
-        default: 4.5,
-        min: [1, 'Rating must be above or equal to 1.0'],
-        max: [5, 'Rating must be less or equal to 5.0']
-    },
-    ratingsQuantity: {
-        type: Number,
-        default: 0
-    },
-    createAt: {
+
+    createdAt: {
         type: Date,
         default: Date.now(),
-    }
+    },
+    quantity: Number
 });
+
+productSchema.pre('save', function (next) {
+    this.slug = slugify(this.name);
+
+    next();
+})
 
 const Product = new mongoose.model('Product', productSchema);
 
